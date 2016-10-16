@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title>Weather</title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/component.css" />
+  <script type="text/javascript" src="js/function.js"></script>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,600" rel="stylesheet"> 
+  <script>
+		var app = angular.module('myApp', []);
+		app.controller('controller', ['$scope', '$http', function($scope, $http) {
+
+			var geocoder;
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+			};
+			//Get the latitude and the longitude;
+			function successFunction(position) {
+				var lat = position.coords.latitude;
+				var lng = position.coords.longitude;
+				codeLatLng(lat, lng);
+			};
+			function errorFunction() {
+				alert("Geocoder failed");
+			};
+			geocoder = new google.maps.Geocoder();
+			function codeLatLng(lat, lng) {
+				var latlng = new google.maps.LatLng(lat, lng);
+				geocoder.geocode({
+					'latLng': latlng
+				}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						console.log(results);
+						if (results[1]) {
+							//formatted address
+							//alert(results[0].formatted_address);
+								//find country name
+							for (var i = 0; i < results[0].address_components.length; i++) {
+								for (var b = 0; b < results[0].address_components[i].types.length; b++) {
+									//there are different types that might hold a city admin_area_lvl_1 usually does in come cases looking for sublocality type will be more appropriate
+									if (results[0].address_components[i].types[b] == "administrative_area_level_1") {
+										//this is the object you are looking for
+										city = results[0].address_components[i];
+										break;
+									};
+								};
+							};
+							//city data
+							console.log(city.short_name + " " + city.long_name);
+							$scope.cityInput = city.long_name;
+							$http({
+								method:'GET',
+								url:'http://api.openweathermap.org/data/2.5/weather?q='+$scope.cityInput+'&appid=9253d160d4f242a0c53edeb4f894cd1a',
+								transformRequest: angular.identity,
+								headers: {'Content-Type': undefined}
+							}).then( function successCallBack(response){
+								$scope.response = response;
+								console.log($scope.response);
+								$scope.humidity		= $scope.response.data.main.humidity;
+								var temp			= $scope.response.data.main.temp-273.15;
+								temp				= Math.round(temp);
+								$scope.temp			= temp;
+								if($scope.temp <= 10 && $scope.temp >= 1){
+									jQuery("body").append("<style>.form-style-4{background:url('images/mildwinter.jpg') no-repeat scroll center center / cover;}</style>");
+								}else if($scope.temp <= 0){
+									jQuery("body").append("<style>.form-style-4{background:url('images/winter.jpg')no-repeat scroll center center / cover;}</style>");
+								}else if($scope.temp >= 11 && $scope.temp <= 32){
+									jQuery("body").append("<style>.form-style-4{background:url('images/mildsummer.jpg')no-repeat scroll center center / cover;}</style>");
+								}else{
+									jQuery("body").append("<style>.form-style-4{background:url('images/hot.jpg')no-repeat scroll center center / cover;}</style>");
+								}
+								$scope.description	= $scope.response.data.weather[0].description;
+								document.getElementById('md-trigger').click();
+							}, function errorCallBack(response){
+								$scope.status = status;
+								console.log($scope.status);
+							});
+						}else{
+							alert("No results found");
+						}
+					}else{
+						alert("Geocoder failed due to: " + status);
+					}
+				});
+			};
+			
+			$scope.getWeather = function(){
+				jQuery("body").css("cursor","wait");
+				console.log($scope.cityInput);
+				$http({
+					method:'GET',
+					url:'http://api.openweathermap.org/data/2.5/weather?q='+$scope.cityInput+'&appid=9253d160d4f242a0c53edeb4f894cd1a',
+					transformRequest: angular.identity,
+					headers: {'Content-Type': undefined}
+				}).then( function successCallBack(response){
+					jQuery("body").css("cursor","auto");
+					$scope.response = response;
+					console.log($scope.response);
+					$scope.humidity		= $scope.response.data.main.humidity;
+					var temp			= $scope.response.data.main.temp-273.15;
+					temp				= Math.round(temp);
+					$scope.temp			= temp;
+					if($scope.temp <= 10 && $scope.temp >= 1){
+						jQuery("body").append("<style>.form-style-4{background:url('images/mildwinter.jpg') no-repeat scroll center center / cover;}</style>");
+					}else if($scope.temp <= 0){
+						jQuery("body").append("<style>.form-style-4{background:url('images/winter.jpg')no-repeat scroll center center / cover;}</style>");
+					}else if($scope.temp >= 11 && $scope.temp <= 32){
+						jQuery("body").append("<style>.form-style-4{background:url('images/mildsummer.jpg')no-repeat scroll center center / cover;}</style>");
+					}else{
+						jQuery("body").append("<style>.form-style-4{background:url('images/hot.jpg')no-repeat scroll center center / cover;}</style>");
+					}
+					$scope.description	= $scope.response.data.weather[0].description;
+					document.getElementById('md-trigger').click();
+				}, function errorCallBack(response){
+					$scope.status = status;
+					console.log($scope.status);
+					jQuery("body").css("cursor","auto");
+				});
+			}
+		}]);
+  </script>
+ </head>
+ <body ng-app="myApp" ng-controller="controller">
+	
+	<div class="md-modal md-effect-1 modal-box" id="modal-1" style="padding:0px;">
+		<button class="md-close cross btn btn-info"></button>
+		<form class="form-style-4" method="post">
+			<h4>Place <span style="font-weight:500;text-transform:capitalize;">{{cityInput}}</span>:</h4>
+			<label for="field1">
+				<span>Temperature</span><p>{{temp}}&deg;C</p>
+			</label>
+			<label for="field1">
+				<span>Humidity</span><p>{{humidity}}</p>
+			</label>
+			<label for="field1">
+				<span>Description</span><p>{{description}}</p>
+			</label>
+		</form>
+	</div>
+	<div class="md-overlay"></div>
+	<a class="btn btn-lg btn-success md-trigger" data-modal="modal-1" id="md-trigger" style="display:none;">Sign in</a>
+	<form class="form-style-4" ng-submit="getWeather()" method="post" id="weatherCondition" >
+		<label for="field1">
+			<span>Enter Your City Name</span><input type="text" name="field1" required="true" ng-model="cityInput"/>
+		</label>
+		<label>
+			<input type="submit" value="Get Weather"/>
+		</label>
+	</form>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script type="text/javascript" src="js/classie.js"></script>
+	<script type="text/javascript" src="js/modalEffects.js"></script>
+ </body>
+</html>
