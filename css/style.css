@@ -1,0 +1,128 @@
+body{
+	height: 100vh;
+	margin: 0px;
+}
+.form-style-4{
+	width: 100%;
+	font-size: 16px;
+	background: #495C70;
+	padding: 30px 30px 15px 30px;
+	border: 5px solid #53687E;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	height:100vh;
+}
+.form-style-4 input[type=submit],
+.form-style-4 input[type=button],
+.form-style-4 input[type=text],
+.form-style-4 input[type=email],
+.form-style-4 textarea,
+.form-style-4 label
+{
+	font-family: 'Raleway', sans-serif;
+	font-size: 16px;
+	color: #fff;
+
+}
+.form-style-4 label {
+	display:block;
+	margin-bottom: 10px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:50px;
+	width:500px;
+	text-align:center;
+}
+.form-style-4 label > span{
+	display: inline-block;
+	float: left;
+	width: 182px;
+}
+.form-style-4 input[type=text],
+.form-style-4 input[type=email]
+{
+	background: transparent;
+	border: none;
+	border-bottom: 1px dashed #83A4C5;
+	width: 275px;
+	outline: none;
+	padding: 0px 0px 0px 0px;
+	font-style: italic;
+}
+.form-style-4 textarea{
+	font-style: italic;
+	padding: 0px 0px 0px 0px;
+	background: transparent;
+	outline: none;
+	border: none;
+	border-bottom: 1px dashed #83A4C5;
+	width: 275px;
+	overflow: hidden;
+	resize:none;
+	height:20px;
+}
+
+.form-style-4 textarea:focus,
+.form-style-4 input[type=text]:focus,
+.form-style-4 input[type=email]:focus,
+.form-style-4 input[type=email] :focus
+{
+	border-bottom: 1px dashed #D9FFA9;
+}
+
+.form-style-4 input[type=submit],
+.form-style-4 input[type=button]{
+	background: #576E86;
+	border: none;
+	padding: 8px 10px 8px 10px;
+	border-radius: 5px;
+	color: #A8BACE;
+	cursor:pointer;
+}
+.form-style-4 input[type=submit]:hover,
+.form-style-4 input[type=button]:hover{
+	background: #394D61;
+}
+
+.modal-box .form-style-4{
+	background:#495c70;
+	padding:10px;
+	height:auto;
+	padding:34px 10px 10px 30px;
+}
+
+.modal-box .form-style-4 label{
+	margin:0px auto 30px;
+}
+
+.modal-box .form-style-4 label > span{
+	text-align:left;
+	color:#4080A6;
+}
+
+.modal-box .form-style-4 h4{
+	text-align:left;
+	font-family: 'Raleway', sans-serif;
+	margin:0px 0px 20px 0px;
+	color:#4080a6;
+	font-weight:normal;
+}
+
+.md-close {
+  border: 0 none;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 16px;
+  padding: 0;
+  position: absolute;
+  right: 0px;
+  top: -19px;
+  width: 16px;
+  background:url("../images/cross.png") no-repeat scroll center center / 100% auto;
+}
+
+.modal-box .form-style-4 input{
+	border:0px;
+	font-style:normal;
+}
